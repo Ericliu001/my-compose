@@ -53,43 +53,44 @@ fun Conversation() {
 
 @Composable
 fun Greeting(name: String) {
-    Row(modifier = Modifier.padding(5.dp)) {
-        Image(
-            painter = painterResource(id = R.drawable.profile_picture),
-            contentDescription = "Profile Picture",
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape)
-                .border(1.5.dp, color = colors.secondary, CircleShape)
-        )
 
-        Spacer(modifier = Modifier.size(5.dp))
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
 
-        var isExpanded by remember {
-            mutableStateOf(false)
-        }
+    val surfaceColor by animateColorAsState(
+        targetValue = if (isExpanded) colors.primary else
+            colors.surface
+    )
 
-        val surfaceColor by animateColorAsState(
-            targetValue = if (isExpanded) colors.primary else
-                colors.surface
-        )
-
-        Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
-            Text(
-                text = "Hello $name!",
-                color = colors.secondaryVariant,
-                style = typography.body1
+    Surface(
+        color = surfaceColor,
+        shape = shapes.medium,
+        elevation = 1.dp,
+        modifier = Modifier.animateContentSize()
+    ) {
+        Row(modifier = Modifier.padding(5.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.profile_picture),
+                contentDescription = "Profile Picture",
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(1.5.dp, color = colors.secondary, CircleShape)
             )
 
             Spacer(modifier = Modifier.size(5.dp))
 
 
-            Surface(
-                color = surfaceColor,
-                shape = shapes.medium,
-                elevation = 1.dp,
-                modifier = Modifier.animateContentSize()
-            ) {
+        Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+            Text(
+                text = "Hello $name!",
+                style = typography.body1
+            )
+
+                Spacer(modifier = Modifier.size(5.dp))
+
+
                 Text(
                     style = typography.body2,
                     modifier = Modifier.padding(4.dp),
