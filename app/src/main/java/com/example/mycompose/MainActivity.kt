@@ -2,6 +2,7 @@ package com.example.mycompose
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mycompose.ui.theme.MyComposeTheme
 
@@ -38,17 +40,16 @@ class MainActivity : ComponentActivity() {
             MyComposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Container(buttonClicked = { launchUber() })
+                    Container(buttonClicked = { uri -> launchUber(uri = uri) })
                 }
             }
         }
     }
 
-    fun launchUber() {
+    fun launchUber(uri: Uri) {
         val openURL = Intent(Intent.ACTION_VIEW)
         openURL.flags = FLAG_ACTIVITY_NEW_TASK
-        openURL.data =
-            Uri.parse("https://m.uber.com/looking?drop%5B0%5D=%7B%22id%22%3A%22c8a04f89-375e-7cba-9545-b32f554276b4%22%2C%22addressLine1%22%3A%22San%20Francisco%20Marriott%20Marquis%22%2C%22addressLine2%22%3A%22780%20Mission%20St%2C%20San%20Francisco%2C%20California%22%2C%22provider%22%3A%22uber_places%22%2C%22locale%22%3A%22en-US%22%2C%22latitude%22%3A37.785023%2C%22longitude%22%3A-122.40481%7D&pickup=%7B%22label%22%3A%22%22%2C%22addressLine1%22%3A%22Strata%20Apartments%22%2C%22addressLine2%22%3A%22555%20Mission%20Rock%20St%2C%20San%20Francisco%2C%20California%22%2C%22latitude%22%3A37.7728338%2C%22longitude%22%3A-122.3906821%7D&state=i81t62qYnGa2ys8TU5Lb-WIMB8e0hraXu6jQHaJfT_M%3D&vehicle=a1111c8c-c720-46c3-8534-2fcdd730040d")
+        openURL.data = uri
         this.startActivity(openURL)
     }
 
@@ -61,7 +62,7 @@ fun Container(buttonClicked: (Uri) -> Unit) {
         Box(
             modifier = Modifier
                 .weight(1f)
-                .background(Color.Cyan)
+                .background(Color.Gray)
         ) {
             QuickNavigationList(buttonClicked)
         }
@@ -107,7 +108,7 @@ fun ShowQuickNavigation(quickNavigation: QuickNavigation, buttonClicked: (Uri) -
 
     Surface(
         color = surfaceColor,
-        shape = shapes.medium,
+        shape = shapes.large,
         elevation = 1.dp,
         modifier = Modifier.animateContentSize()
     ) {
@@ -148,25 +149,25 @@ fun ShowQuickNavigation(quickNavigation: QuickNavigation, buttonClicked: (Uri) -
     }
 }
 
-//@Preview(
-//    "Light Theme",
-//    showBackground = true,
-//)
-//@Composable
-//fun DefaultPreview() {
-//    MyComposeTheme {
-//        Container(this)
-//    }
-//}
-//
-//@Preview(
-//    "Dark Theme",
-//    showBackground = true,
-//    uiMode = Configuration.UI_MODE_NIGHT_YES,
-//)
-//@Composable
-//fun DarkModePreview() {
-//    MyComposeTheme {
-//        Container(this)
-//    }
-//}
+@Preview(
+    "Light Theme",
+    showBackground = true,
+)
+@Composable
+fun DefaultPreview() {
+    MyComposeTheme {
+        Container(buttonClicked = {})
+    }
+}
+
+@Preview(
+    "Dark Theme",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Composable
+fun DarkModePreview() {
+    MyComposeTheme {
+        Container { }
+    }
+}
