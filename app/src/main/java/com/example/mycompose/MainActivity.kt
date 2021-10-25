@@ -15,7 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -63,7 +63,7 @@ fun Container(buttonClicked: () -> Unit) {
                 .weight(1f)
                 .background(Color.Cyan)
         ) {
-            Conversation()
+            Conversation(buttonClicked)
         }
 
         Box(
@@ -72,16 +72,16 @@ fun Container(buttonClicked: () -> Unit) {
                 .fillMaxWidth()
                 .background(Color.Green)
         ) {
-            ActionMenuItem(buttonClicked)
+            RequestButton(buttonClicked)
         }
     }
 }
 
 
 @Composable
-fun ActionMenuItem(buttonClicked: () -> Unit) {
+fun RequestButton(buttonClicked: () -> Unit) {
     Button(
-        modifier = Modifier.size(150.dp, 50.dp),
+        modifier = Modifier.wrapContentSize(),
         onClick = { buttonClicked() }) {
         Text(text = "Click")
     }
@@ -89,7 +89,7 @@ fun ActionMenuItem(buttonClicked: () -> Unit) {
 
 
 @Composable
-fun Conversation() {
+fun Conversation(buttonClicked: () -> Unit) {
     LazyColumn {
 //        for (i in 0..4) {
 //            item {
@@ -97,13 +97,13 @@ fun Conversation() {
 //            }
 //        }
         items(listOf("Eric", "Beta", "Brandon", "Felix")) { element ->
-            Greeting(name = element)
+            Greeting(name = element, buttonClicked)
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
+fun Greeting(name: String, buttonClicked: () -> Unit) {
 
     var isExpanded by remember {
         mutableStateOf(false)
@@ -122,18 +122,20 @@ fun Greeting(name: String) {
     ) {
         Row(modifier = Modifier.padding(5.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.profile_picture),
+                painter = painterResource(id = R.drawable.ic_badgessuvblack),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(CircleShape)
-                    .border(1.5.dp, color = colors.secondary, CircleShape)
+                    .clip(RoundedCornerShape(5.dp))
+                    .border(1.5.dp, color = colors.secondary, RoundedCornerShape(5.dp))
             )
 
             Spacer(modifier = Modifier.size(5.dp))
 
 
-            Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+            Column(modifier = Modifier
+                .weight(1f)
+                .clickable { isExpanded = !isExpanded }) {
                 Text(
                     text = "Hello $name!",
                     style = typography.body1
@@ -149,6 +151,8 @@ fun Greeting(name: String) {
                     text = "Composable functions can store local state in memory by using remember, and track changes to the value passed to mutableStateOf. Composables (and its children) using this state will get redrawn automatically when the value is updated. We call this recomposition.",
                 )
             }
+
+            RequestButton(buttonClicked)
         }
     }
 }
