@@ -7,10 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
@@ -19,8 +21,10 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +37,7 @@ class MainActivity : ComponentActivity() {
             MyComposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Conversation()
+                    Container()
                 }
             }
         }
@@ -41,12 +45,35 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun Container() {
+    Box {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .align(Alignment.TopCenter)
+            .background(Color.Cyan)) {
+            Conversation()
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .height(150.dp)
+                .fillMaxWidth()
+                .background(Color.Green)
+        )
+    }
+}
+
+@Composable
 fun Conversation() {
     LazyColumn {
-        for (i in 0..30) {
-            item {
-                Greeting(name = "Eric")
-            }
+//        for (i in 0..4) {
+//            item {
+//                Greeting(name = "Eric")
+//            }
+//        }
+        items(listOf("Eric", "Beta", "Brandon", "Felix")) { element ->
+            Greeting(name = element)
         }
     }
 }
@@ -82,11 +109,11 @@ fun Greeting(name: String) {
             Spacer(modifier = Modifier.size(5.dp))
 
 
-        Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
-            Text(
-                text = "Hello $name!",
-                style = typography.body1
-            )
+            Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+                Text(
+                    text = "Hello $name!",
+                    style = typography.body1
+                )
 
                 Spacer(modifier = Modifier.size(5.dp))
 
