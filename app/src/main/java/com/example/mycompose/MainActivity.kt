@@ -56,54 +56,45 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Container(buttonClicked: () -> Unit) {
+fun Container(buttonClicked: (Uri) -> Unit) {
     Column {
         Box(
             modifier = Modifier
                 .weight(1f)
                 .background(Color.Cyan)
         ) {
-            Conversation(buttonClicked)
-        }
-
-        Box(
-            modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth()
-                .background(Color.Green)
-        ) {
-            RequestButton(buttonClicked)
+            QuickNavigationList(buttonClicked)
         }
     }
 }
 
 
 @Composable
-fun RequestButton(buttonClicked: () -> Unit) {
+fun RequestButton(uri: Uri, buttonClicked: (Uri) -> Unit) {
     Button(
         modifier = Modifier.wrapContentSize(),
-        onClick = { buttonClicked() }) {
+        onClick = { buttonClicked(uri) }) {
         Text(text = "Click")
     }
 }
 
 
 @Composable
-fun Conversation(buttonClicked: () -> Unit) {
+fun QuickNavigationList(buttonClicked: (Uri) -> Unit) {
     LazyColumn {
 //        for (i in 0..4) {
 //            item {
 //                Greeting(name = "Eric")
 //            }
 //        }
-        items(listOf("Eric", "Beta", "Brandon", "Felix")) { element ->
-            Greeting(name = element, buttonClicked)
+        items(NavigationRepository().getNavigations()) { element ->
+            ShowQuickNavigation(quickNavigation = element, buttonClicked)
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, buttonClicked: () -> Unit) {
+fun ShowQuickNavigation(quickNavigation: QuickNavigation, buttonClicked: (Uri) -> Unit) {
 
     var isExpanded by remember {
         mutableStateOf(false)
@@ -137,7 +128,7 @@ fun Greeting(name: String, buttonClicked: () -> Unit) {
                 .weight(1f)
                 .clickable { isExpanded = !isExpanded }) {
                 Text(
-                    text = "Hello $name!",
+                    text = quickNavigation.title,
                     style = typography.body1
                 )
 
@@ -148,11 +139,11 @@ fun Greeting(name: String, buttonClicked: () -> Unit) {
                     style = typography.body2,
                     modifier = Modifier.padding(4.dp),
                     maxLines = if (isExpanded) Int.MAX_VALUE else 1,
-                    text = "Composable functions can store local state in memory by using remember, and track changes to the value passed to mutableStateOf. Composables (and its children) using this state will get redrawn automatically when the value is updated. We call this recomposition.",
+                    text = quickNavigation.body,
                 )
             }
 
-            RequestButton(buttonClicked)
+            RequestButton(quickNavigation.uri, buttonClicked)
         }
     }
 }
